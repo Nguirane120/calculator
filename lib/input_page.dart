@@ -17,6 +17,7 @@ class InputPage extends StatefulWidget {
 
 class _InputPageState extends State<InputPage> {
   Gender? selctedGender;
+  int height = 180;
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +52,7 @@ class _InputPageState extends State<InputPage> {
                   child: ReusableCard(
                     onPress: () {
                       setState(() {
-                        selctedGender = Gender.male;
+                        selctedGender = Gender.female;
                       });
                     },
                     color: selctedGender == Gender.female
@@ -72,15 +73,35 @@ class _InputPageState extends State<InputPage> {
               cardChild: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("HEIGHT", style: textStyle,)
-                  ,SizedBox(height: 10),
+                  Text(
+                    "HEIGHT",
+                    style: textStyle,
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.baseline,
+                    textBaseline: TextBaseline.alphabetic,
                     children: [
-                      Text("189", style: textStyle,),
-                      SizedBox(width: 10),
-                      Text("cm", style: TextStyle(color: Color(0xffFFFFFF)),)
+                      Text(
+                        height.toString(),
+                        style: textStyle,
+                      ),
+                      Text(
+                        "cm",
+                        style: TextStyle(color: Color(0xffFFFFFF)),
+                      )
                     ],
+                  ),
+                  Slider(
+                    value: height.toDouble(),
+                    min: 120.0,
+                    max: 220.0,
+                    activeColor: Color(0xffFF0167),
+                    onChanged: (double newValue) {
+                      setState(() {
+                        height = newValue.round();
+                      });
+                    },
                   )
                 ],
               ),
