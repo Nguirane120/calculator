@@ -1,5 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:calculator/calculator.dart';
 import 'package:calculator/const.dart';
+import 'package:calculator/resultpage.dart';
+import 'package:calculator/roundicon.dart';
 import 'package:calculator/widgets/card.dart';
 import 'package:calculator/widgets/card_content.dart';
 import 'package:flutter/material.dart';
@@ -18,11 +21,14 @@ class InputPage extends StatefulWidget {
 class _InputPageState extends State<InputPage> {
   Gender? selctedGender;
   int height = 180;
+  int weight = 60;
+  int age = 10;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        elevation: 10.0,
         title: const Text(
           'BMI CALCULATOR',
           style: TextStyle(color: Color(0xffFDFDFD)),
@@ -38,6 +44,11 @@ class _InputPageState extends State<InputPage> {
               children: [
                 Expanded(
                   child: ReusableCard(
+                    onPress: () {
+                      setState(() {
+                        selctedGender = Gender.male;
+                      });
+                    },
                     color: selctedGender == Gender.male
                         ? activeColor
                         : inactiveColor,
@@ -75,7 +86,9 @@ class _InputPageState extends State<InputPage> {
                 children: [
                   Text(
                     "HEIGHT",
-                    style: textStyle,
+                    style: TextStyle(
+                      color: Color(0xff878A9D),
+                    ),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -118,23 +131,153 @@ class _InputPageState extends State<InputPage> {
             child: Row(
               children: [
                 Expanded(
-                  child: ReusableCard(color: cardColor),
+                  child: ReusableCard(
+                    color: cardColor,
+                    cardChild: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "WEIGHT",
+                          style: TextStyle(
+                              color: Color(0xff878A9D),
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.normal),
+                        ),
+                        SizedBox(
+                          height: 10.0,
+                        ),
+                        Text(
+                          weight.toString(),
+                          style: textStyle,
+                        ),
+                        SizedBox(
+                          height: 10.0,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            RoundIcon(
+                              icon: FontAwesomeIcons.minus,
+                              onpress: () {
+                                setState(() {
+                                  weight--;
+                                });
+                              },
+                            ),
+                            SizedBox(
+                              width: 15.0,
+                            ),
+                            RoundIcon(
+                                onpress: () {
+                                  setState(() {
+                                    weight++;
+                                  });
+                                },
+                                icon: FontAwesomeIcons.plus)
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
                 ),
                 Expanded(
                   child: ReusableCard(
                     color: cardColor,
+                    cardChild: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "AGE",
+                          style: TextStyle(
+                              color: Color(0xff878A9D),
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.normal),
+                        ),
+                        SizedBox(
+                          height: 15.0,
+                        ),
+                        Text(
+                          age.toString(),
+                          style: textStyle,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            RoundIcon(
+                              icon: FontAwesomeIcons.minus,
+                              onpress: () {
+                                setState(() {
+                                  age--;
+                                });
+                              },
+                            ),
+                            SizedBox(
+                              width: 15.0,
+                            ),
+                            RoundIcon(
+                                onpress: () {
+                                  setState(() {
+                                    age++;
+                                  });
+                                },
+                                icon: FontAwesomeIcons.plus)
+                          ],
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ],
             ),
           ),
-          Container(
-            color: Color(0xffEB1555),
-            width: double.infinity,
-            height: botomheightContainer,
-            margin: EdgeInsetsDirectional.only(top: 10.0),
+          BottomButtom(
+            text: "CALCULATE YOUR BMI",
+            onTap: () {
+              CalculatorBrain calc =
+                  CalculatorBrain(height: height, weight: weight);
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => Resultpage(
+                            bmiResult: calc.calculateBMI(),
+                            resultText: calc.getResult(),
+                            interpretation: calc.getInterpretation(),
+                          )));
+            },
           ),
         ],
+      ),
+    );
+  }
+}
+
+class BottomButtom extends StatelessWidget {
+  final String text;
+  final GestureTapCallback onTap;
+
+  BottomButtom({required this.onTap, required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        color: Color(0xffEB1555),
+        width: double.infinity,
+        height: botomheightContainer,
+        // margin: EdgeInsetsDirectional.only(top: 10.0),
+        // padding: EdgeInsets.only(bottom: 15.0),
+        child: Center(
+          child: Text(
+            text,
+            style: TextStyle(
+                color: Color(
+                  0xffFFFFFF,
+                ),
+                fontSize: 18.0,
+                fontWeight: FontWeight.bold),
+          ),
+        ),
       ),
     );
   }
